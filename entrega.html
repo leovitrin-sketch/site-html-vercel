@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080c15">
+  <title>Arquivos do pedido — Eixo Zero</title>
+  <style>
+    :root{color-scheme:dark;--bg:#080c15;--panel:#101827;--line:#253248;--text:#f5f7fb;--muted:#a9b6c9;--aqua:#31e4d6;--purple:#a78bfa}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 78% 5%,#16263a 0,transparent 36%),var(--bg);color:var(--text);font:16px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+    a{color:inherit}.shell{width:min(100% - 36px,1050px);margin:auto}.topbar{height:82px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ffffff12}.brand{text-decoration:none;font-weight:850;font-size:21px;letter-spacing:-.04em}.brand span{color:var(--aqua)}.brand i{font-style:normal;color:var(--purple);margin-left:8px}.top-link{color:var(--muted);text-decoration:none;font-weight:650}.top-link:hover{color:var(--aqua)}
+    main{display:grid;place-items:center;min-height:calc(100vh - 150px);padding:55px 0}.card{width:min(100%,760px);border:1px solid var(--line);border-radius:28px;background:linear-gradient(145deg,#111b2aee,#0c1320f5);box-shadow:0 30px 100px #0007;padding:clamp(24px,5vw,48px);overflow:hidden}.eyebrow{margin:0 0 9px;color:var(--aqua);font-size:12px;font-weight:850;letter-spacing:.16em;text-transform:uppercase}.status{display:flex;align-items:center;gap:10px;color:var(--muted);font-weight:700}.status-dot{width:9px;height:9px;background:var(--aqua);border-radius:50%;box-shadow:0 0 18px #31e4d688}.card h1{font-size:clamp(30px,5vw,48px);line-height:1.08;letter-spacing:-.045em;margin:15px 0 10px}.summary{color:var(--muted);margin:0 0 28px}.order{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:15px 0;margin-bottom:18px;color:var(--muted);font-size:14px}.order strong{color:var(--text)}
+    .files{display:grid;gap:11px}.file{display:flex;align-items:center;gap:15px;min-width:0;border:1px solid #2a3850;border-radius:18px;background:#0a111d;padding:14px;animation:rise .35s both}.file-badge{flex:0 0 54px;height:54px;display:grid;place-items:center;border-radius:14px;background:#31e4d615;color:var(--aqua);font-size:11px;font-weight:900;letter-spacing:.04em}.file-copy{min-width:0;flex:1}.file-name{display:block;overflow-wrap:anywhere;font-weight:750}.file-meta{display:block;color:var(--muted);font-size:13px;margin-top:3px}.download{display:inline-flex;align-items:center;gap:9px;padding:11px 15px;border-radius:12px;background:var(--aqua);color:#061019;text-decoration:none;font-size:14px;font-weight:850;white-space:nowrap;transition:transform .18s,filter .18s}.download:hover{transform:translateY(-2px);filter:brightness(1.07)}.empty{border:1px dashed #40506a;border-radius:16px;color:var(--muted);padding:19px}.support{margin:25px 0 0;color:var(--muted);font-size:14px}.support a{color:var(--aqua);font-weight:700}.footer{padding:22px 0 30px;text-align:center;color:#8290a5;font-size:12px}
+    @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}@media(max-width:560px){.shell{width:min(100% - 24px,1050px)}.topbar{height:68px}.card{border-radius:21px}.file{align-items:flex-start;flex-wrap:wrap}.file-copy{padding-top:3px}.download{margin-left:69px}.order{flex-direction:column}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar"><a class="brand" href="/">Eixo<span>Zero</span><i>◆</i></a><a class="top-link" href="/">Voltar ao catálogo</a></header>
+    <main>
+      <section class="card" aria-live="polite">
+        <p class="eyebrow">EIXO ZERO · ENTREGA DIGITAL</p>
+        <div class="status"><span class="status-dot" id="statusDot"></span><span id="status">Conferindo o link</span></div>
+        <h1 id="title">Preparando seus arquivos</h1>
+        <p class="summary" id="summary">Esta página mostra os arquivos vinculados ao pedido aprovado no Telegram.</p>
+        <div class="order" id="order" hidden></div>
+        <div class="files" id="files"></div>
+        <p class="support" id="support" hidden>Precisa de ajuda? <a href="https://t.me/EixoZerobot" target="_blank" rel="noopener noreferrer">Fale com o Eixo Zero no Telegram</a>.</p>
+      </section>
+    </main>
+    <footer class="footer">Eixo Zero · página pessoal de entrega</footer>
+  </div>
+  <script>
+    (() => {
+      const byId = id => document.getElementById(id);
+      const setUnavailable = message => {
+        byId('status').textContent = 'Acesso não liberado';
+        byId('title').textContent = 'Não encontramos arquivos neste link';
+        byId('summary').textContent = message;
+        byId('statusDot').style.background = '#a78bfa';
+      };
+      const match = /^#entrega=([A-Za-z0-9_-]+)$/.exec(location.hash);
+      if (!match) {
+        setUnavailable('Os arquivos ficam disponíveis aqui somente pelo link pessoal enviado pelo bot após a aprovação do pagamento.');
+        return;
+      }
+      try {
+        const encoded = match[1].replace(/-/g, '+').replace(/_/g, '/');
+        const binary = atob(encoded.padEnd(Math.ceil(encoded.length / 4) * 4, '='));
+        const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
+        const payload = JSON.parse(new TextDecoder().decode(bytes));
+        const requestedId = new URLSearchParams(location.search).get('jogo');
+        const files = Array.isArray(payload.files) ? [...new Set(payload.files.filter(value => {
+          try { const url = new URL(value); return url.protocol === 'https:' && !url.username && !url.password; }
+          catch { return false; }
+        }))] : [];
+        if (!requestedId || String(payload.product_id) !== requestedId || !Number.isInteger(Number(payload.order_id)) || !files.length) {
+          throw new Error('invalid_delivery');
+        }
+        byId('status').textContent = 'Pagamento aprovado';
+        byId('title').textContent = payload.product_name || 'Arquivos liberados';
+        byId('summary').textContent = 'Os arquivos deste pedido estão prontos para baixar.';
+        byId('order').hidden = false;
+        byId('order').replaceChildren();
+        const orderNumber = document.createElement('span'); orderNumber.textContent = `Pedido #${Number(payload.order_id)}`;
+        const fileCount = document.createElement('span'); fileCount.textContent = `${files.length} ${files.length === 1 ? 'arquivo' : 'arquivos'} liberados`;
+        byId('order').append(orderNumber, fileCount);
+        byId('support').hidden = false;
+        files.forEach((value, index) => {
+          const url = new URL(value);
+          let filename = url.pathname.split('/').filter(Boolean).pop() || `Arquivo ${index + 1}`;
+          try { filename = decodeURIComponent(filename); } catch {}
+          filename = filename.replace(/[<>\u0000-\u001f]/g, '').trim() || `Arquivo ${index + 1}`;
+          const ext = /\.([a-z0-9]{1,10})$/i.exec(filename)?.[1]?.toUpperCase() || 'FILE';
+          const item = document.createElement('article');
+          item.className = 'file';
+          item.style.animationDelay = `${Math.min(index * 45, 270)}ms`;
+          const badge = document.createElement('span'); badge.className = 'file-badge'; badge.textContent = ext;
+          const copy = document.createElement('span'); copy.className = 'file-copy';
+          const name = document.createElement('span'); name.className = 'file-name'; name.textContent = filename;
+          const meta = document.createElement('span'); meta.className = 'file-meta'; meta.textContent = `${ext} · arquivo ${index + 1}`;
+          copy.append(name, meta);
+          const link = document.createElement('a'); link.className = 'download'; link.href = url.href; link.target = '_blank'; link.rel = 'noopener noreferrer'; link.referrerPolicy = 'no-referrer'; link.textContent = 'Baixar ↓';
+          item.append(badge, copy, link); byId('files').append(item);
+        });
+      } catch {
+        setUnavailable('O link está incompleto ou inválido. Volte ao Telegram e abra novamente o botão enviado pelo bot.');
+      }
+    })();
+  </script>
+</body>
+</html>
+

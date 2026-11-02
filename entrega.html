@@ -3,45 +3,76 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#080c15">
+  <meta name="theme-color" content="#080b12">
   <title>Arquivos do pedido — Eixo Zero</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root{color-scheme:dark;--bg:#080c15;--panel:#101827;--line:#253248;--text:#f5f7fb;--muted:#a9b6c9;--aqua:#31e4d6;--purple:#a78bfa}
-    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 78% 5%,#16263a 0,transparent 36%),var(--bg);color:var(--text);font:16px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
-    a{color:inherit}.shell{width:min(100% - 36px,1050px);margin:auto}.topbar{height:82px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ffffff12}.brand{text-decoration:none;font-weight:850;font-size:21px;letter-spacing:-.04em}.brand span{color:var(--aqua)}.brand i{font-style:normal;color:var(--purple);margin-left:8px}.top-link{color:var(--muted);text-decoration:none;font-weight:650}.top-link:hover{color:var(--aqua)}
-    main{display:grid;place-items:center;min-height:calc(100vh - 150px);padding:55px 0}.card{width:min(100%,760px);border:1px solid var(--line);border-radius:28px;background:linear-gradient(145deg,#111b2aee,#0c1320f5);box-shadow:0 30px 100px #0007;padding:clamp(24px,5vw,48px);overflow:hidden}.eyebrow{margin:0 0 9px;color:var(--aqua);font-size:12px;font-weight:850;letter-spacing:.16em;text-transform:uppercase}.status{display:flex;align-items:center;gap:10px;color:var(--muted);font-weight:700}.status-dot{width:9px;height:9px;background:var(--aqua);border-radius:50%;box-shadow:0 0 18px #31e4d688}.card h1{font-size:clamp(30px,5vw,48px);line-height:1.08;letter-spacing:-.045em;margin:15px 0 10px}.summary{color:var(--muted);margin:0 0 28px}.order{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:15px 0;margin-bottom:18px;color:var(--muted);font-size:14px}.order strong{color:var(--text)}
-    .files{display:grid;gap:11px}.file{display:flex;align-items:center;gap:15px;min-width:0;border:1px solid #2a3850;border-radius:18px;background:#0a111d;padding:14px;animation:rise .35s both}.file-badge{flex:0 0 54px;height:54px;display:grid;place-items:center;border-radius:14px;background:#31e4d615;color:var(--aqua);font-size:11px;font-weight:900;letter-spacing:.04em}.file-copy{min-width:0;flex:1}.file-name{display:block;overflow-wrap:anywhere;font-weight:750}.file-meta{display:block;color:var(--muted);font-size:13px;margin-top:3px}.download{display:inline-flex;align-items:center;gap:9px;padding:11px 15px;border-radius:12px;background:var(--aqua);color:#061019;text-decoration:none;font-size:14px;font-weight:850;white-space:nowrap;transition:transform .18s,filter .18s}.download:hover{transform:translateY(-2px);filter:brightness(1.07)}.empty{border:1px dashed #40506a;border-radius:16px;color:var(--muted);padding:19px}.support{margin:25px 0 0;color:var(--muted);font-size:14px}.support a{color:var(--aqua);font-weight:700}.footer{padding:22px 0 30px;text-align:center;color:#8290a5;font-size:12px}
-    @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}@media(max-width:560px){.shell{width:min(100% - 24px,1050px)}.topbar{height:68px}.card{border-radius:21px}.file{align-items:flex-start;flex-wrap:wrap}.file-copy{padding-top:3px}.download{margin-left:69px}.order{flex-direction:column}}
+    :root{color-scheme:dark;--bg:#080b12;--sidebar:#070b13;--panel:#101622;--raised:#151e2c;--line:#263143;--white:#f7f8fb;--muted:#aab5c7;--dim:#718096;--lime:#c9f542;--lime-bright:#d9ff65;--display:"Space Grotesk","Manrope","Segoe UI",sans-serif;font-family:"Manrope","Segoe UI",Arial,sans-serif;font-synthesis:none;background:var(--bg);color:var(--white)}
+    *{box-sizing:border-box}html{min-width:320px;scroll-behavior:smooth}body{min-width:320px;min-height:100vh;margin:0;background:radial-gradient(ellipse at 82% 4%,#c9f5420d,transparent 33%),var(--bg);color:var(--white)}body,button,a{font-family:"Manrope","Segoe UI",Arial,sans-serif}a{color:inherit;text-decoration:none}button,a{-webkit-tap-highlight-color:transparent}:where(a,button):focus-visible{outline:2px solid var(--lime);outline-offset:4px}[hidden]{display:none!important}
+    .sidebar{position:fixed;inset:0 auto 0 0;z-index:5;width:286px;display:flex;flex-direction:column;padding:23px 15px 16px;border-right:1px solid #1c2635;background:var(--sidebar)}.brand{min-height:42px;display:inline-flex;align-items:center;gap:12px;padding:0 8px}.brand-symbol{width:34px;height:34px;display:grid;place-items:center;position:relative;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:var(--lime);color:#11150a;font:800 15px/1 var(--display);letter-spacing:-2px}.brand-symbol span{margin-left:-2px;color:#23300a}.brand-name{color:var(--white);font:700 20px/1 var(--display);letter-spacing:-.8px}.brand-name b{color:var(--lime);font-weight:700}.sidebar-caption{margin:44px 12px 12px;color:#68778e;font-size:9px;font-weight:800;letter-spacing:1.5px}.side-nav{display:grid;gap:7px}.side-link{min-height:55px;display:flex;align-items:center;gap:14px;padding:0 15px;border-radius:14px;color:#aebbd0;font-size:13px;font-weight:700;transition:color .2s ease,background .2s ease,transform .2s ease}.side-link svg{width:20px;height:20px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.side-link:hover{color:var(--white);background:#111b2b;transform:translateX(2px)}.side-link.active{border-left:3px solid var(--lime);color:var(--lime);background:#131d2d}.sidebar-bottom{display:grid;gap:17px;margin-top:auto;padding:0 8px}.catalog-status{display:flex;align-items:center;gap:12px;padding:13px 5px 17px;border-bottom:1px solid #222c3b;color:#8f9db1;font-size:10px;line-height:1.7}.catalog-status b{color:#e4eaf3;font-size:11px}.status-pulse{width:8px;height:8px;flex:0 0 auto;border-radius:50%;background:var(--lime);box-shadow:0 0 14px #c9f588aa;animation:pulse 1.8s ease-in-out infinite alternate}.sidebar-brandline{padding:0 3px;color:#68758a;font-size:8px;font-weight:800;letter-spacing:1.2px}.sidebar-brandline i{padding:0 5px;color:var(--lime);font-size:6px;font-style:normal}
+    .app-shell{min-height:100vh;margin-left:286px}.mobile-bar{display:none}.delivery-hero{position:relative;min-height:390px;margin:22px 30px 0;padding:66px 5% 46px;overflow:hidden;isolation:isolate;border:1px solid #ffffff14;border-radius:27px;background:radial-gradient(ellipse at 85% 22%,#c9f54223,transparent 28%),radial-gradient(ellipse at 28% 85%,#2674a822,transparent 45%),linear-gradient(135deg,#111b29,#0b1019 70%);box-shadow:0 28px 90px #0006}.delivery-hero:before{position:absolute;inset:0;z-index:-1;content:"";background:linear-gradient(90deg,#080b12db 0%,#080b1277 66%,#080b121f 100%),linear-gradient(0deg,#080b12bb,transparent 70%)}.hero-watermark{position:absolute;right:5%;top:16%;z-index:-1;color:#c9f54212;font:700 clamp(150px,22vw,310px)/.8 var(--display);letter-spacing:-.12em;user-select:none}.hero-content{position:relative;max-width:850px;animation:slide-up .48s cubic-bezier(.2,.8,.2,1) both}.eyebrow{display:flex;align-items:center;gap:10px;margin:0 0 17px;color:var(--lime);font-size:10px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase}.status-dot{width:8px;height:8px;flex:0 0 auto;border-radius:50%;background:var(--lime);box-shadow:0 0 14px #c9f588aa}.hero-content h1{max-width:920px;margin:0;color:var(--white);font:700 clamp(38px,5.4vw,76px)/.99 var(--display);letter-spacing:-3px;text-wrap:balance;overflow-wrap:anywhere}.hero-summary{max-width:690px;margin:18px 0 0;color:#bac5d5;font-size:14px;line-height:1.8}.hero-tags{display:flex;flex-wrap:wrap;gap:9px;margin-top:23px}.hero-tags span{padding:8px 12px;border:1px solid #c9f54255;border-radius:999px;color:var(--lime);background:#080b1266;font-size:9px;font-weight:800;letter-spacing:.6px;text-transform:uppercase}.hero-mark{position:absolute;right:27px;bottom:21px;color:#d4dae5a8;font-size:8px;font-weight:800;letter-spacing:1.5px}.hero-mark i{color:var(--lime);font-style:normal}
+    .downloads-section{padding:42px 48px 50px}.section-heading{display:flex;align-items:end;justify-content:space-between;gap:22px;margin-bottom:19px}.section-heading .eyebrow{margin-bottom:7px;font-size:9px}.section-heading h2{margin:0;font:700 clamp(23px,2.2vw,32px)/1.1 var(--display);letter-spacing:-1px}.section-note{margin:8px 0 0;color:#8794a8;font-size:11px;line-height:1.65}.downloads-count{color:#94a1b5;font:700 10px var(--display);white-space:nowrap}.downloads-count i{padding:0 5px;color:var(--lime);font-style:normal}.files{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.file{min-width:0;display:flex;align-items:center;gap:13px;padding:14px;border:1px solid #263247;border-radius:15px;background:linear-gradient(135deg,#121b29,#0e1520);box-shadow:0 15px 45px #0002;animation:card-in .4s both;transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}.file:hover{transform:translateY(-3px);border-color:#c9f54280;box-shadow:0 18px 40px #0005}.file-badge{width:48px;height:48px;flex:0 0 auto;display:grid;place-items:center;border:1px solid #c9f54262;border-radius:13px;color:var(--lime);background:#c9f54212;font:700 10px var(--display);letter-spacing:.2px}.file-copy{min-width:0;flex:1}.file-name{display:block;overflow-wrap:anywhere;color:#f4f6fa;font:600 12px/1.45 var(--display)}.file-meta{display:block;margin-top:5px;color:#8290a5;font-size:9px;font-weight:700;letter-spacing:.55px;text-transform:uppercase}.button-download{min-height:39px;flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 13px;border:1px solid #c9f54260;border-radius:11px;color:#11150a;background:var(--lime);font-size:10px;font-weight:900;text-decoration:none;transition:transform .2s ease,background .2s ease,box-shadow .2s ease}.button-download:hover{transform:translateY(-2px);background:var(--lime-bright);box-shadow:0 9px 24px #c9f54233}.empty-state{padding:25px 17px;border:1px dashed #344158;border-radius:15px;color:#98a5b7;background:#0d131e;text-align:center;font-size:12px}.support{margin:22px 0 0;color:#8794a8;font-size:11px}.support a{color:var(--lime);font-weight:800}.site-footer{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:19px 48px 26px;border-top:1px solid #ffffff12;color:#77849a;font-size:8px;font-weight:800;letter-spacing:1.2px}.site-footer i{color:var(--lime);font-style:normal}.site-footer a{color:#cad3e0;letter-spacing:0;transition:color .2s ease}.site-footer a:hover{color:var(--lime)}
+    @keyframes pulse{to{opacity:.45;box-shadow:0 0 4px #c9f54255}}@keyframes slide-up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}@keyframes card-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    @media(max-width:1100px){.files{grid-template-columns:1fr}.downloads-section{padding-right:32px;padding-left:32px}.site-footer{padding-right:32px;padding-left:32px}}
+    @media(max-width:760px){.sidebar{display:none}.app-shell{margin-left:0}.mobile-bar{height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-bottom:1px solid #1c2635;background:#070b13}.mobile-bar .brand{padding:0}.mobile-bar .brand-symbol{width:30px;height:30px;font-size:13px}.mobile-bar .brand-name{font-size:18px}.mobile-link{padding:9px 12px;border:1px solid #293548;border-radius:10px;color:#dbe2ec;font-size:10px;font-weight:800}.delivery-hero{min-height:340px;margin:13px 12px 0;padding:55px 22px 46px;border-radius:20px}.hero-content h1{font-size:clamp(36px,10vw,58px);letter-spacing:-2px}.hero-summary{font-size:12px}.hero-mark{right:16px;bottom:15px;font-size:7px}.hero-watermark{right:4%;top:25%;font-size:170px}.downloads-section{padding:34px 20px 38px}.section-heading{align-items:start}.section-heading h2{font-size:25px}.file{gap:10px;padding:11px}.file-badge{width:42px;height:42px}.file-name{font-size:11px}.button-download{padding:0 10px;font-size:9px}.site-footer{align-items:flex-start;flex-direction:column;padding:18px 20px 24px}}
+    @media(max-width:430px){.file{display:grid;grid-template-columns:42px minmax(0,1fr);align-items:center}.file-badge{grid-row:1}.file-copy{grid-column:2;grid-row:1}.button-download{grid-column:1/-1;width:100%;margin-top:2px}.hero-tags span{font-size:8px}.section-heading{flex-direction:column;gap:8px}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
   </style>
 </head>
 <body>
-  <div class="shell">
-    <header class="topbar"><a class="brand" href="/">Eixo<span>Zero</span><i>◆</i></a><a class="top-link" href="/">Voltar ao catálogo</a></header>
+  <aside class="sidebar">
+    <a class="brand" href="/" aria-label="Eixo Zero, início"><span class="brand-symbol">E<span>Z</span></span><span class="brand-name">Eixo <b>Zero</b></span></a>
+    <p class="sidebar-caption">CATÁLOGO E ENTREGA</p>
+    <nav class="side-nav" aria-label="Navegação principal">
+      <a class="side-link" href="/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>Início</a>
+      <a class="side-link" href="/#catalogo"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Catálogo de jogos</a>
+      <a class="side-link active" href="/entrega.html" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5M12 15V3"/></svg>Meus arquivos</a>
+      <a class="side-link" href="https://t.me/EixoZerobot" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>Abrir bot Telegram</a>
+    </nav>
+    <div class="sidebar-bottom"><div class="catalog-status"><span class="status-pulse"></span><span><b>Eixo Zero</b><br>Ports · Jogos · Android</span></div><div class="sidebar-brandline">PORTS <i>◆</i> JOGOS <i>◆</i> EIXO ZERO</div></div>
+  </aside>
+  <div class="app-shell">
+    <header class="mobile-bar"><a class="brand" href="/" aria-label="Eixo Zero, início"><span class="brand-symbol">E<span>Z</span></span><span class="brand-name">Eixo <b>Zero</b></span></a><a class="mobile-link" href="/#catalogo">Catálogo</a></header>
     <main>
-      <section class="card" aria-live="polite">
-        <p class="eyebrow">EIXO ZERO · ENTREGA DIGITAL</p>
-        <div class="status"><span class="status-dot" id="statusDot"></span><span id="status">Conferindo o link</span></div>
-        <h1 id="title">Preparando seus arquivos</h1>
-        <p class="summary" id="summary">Esta página mostra os arquivos vinculados ao pedido aprovado no Telegram.</p>
-        <div class="order" id="order" hidden></div>
-        <div class="files" id="files"></div>
+      <section class="delivery-hero" aria-live="polite">
+        <span class="hero-watermark" aria-hidden="true">EZ</span>
+        <div class="hero-content">
+          <p class="eyebrow"><span class="status-dot status-pulse" id="statusDot"></span><span id="status">Conferindo acesso</span></p>
+          <h1 id="title">Preparando seus arquivos</h1>
+          <p class="hero-summary" id="summary">Esta página mostra os arquivos vinculados ao pedido aprovado no Telegram.</p>
+          <div class="hero-tags" id="order" hidden></div>
+        </div>
+        <div class="hero-mark">EIXO ZERO <i>◆</i> ENTREGA DIGITAL</div>
+      </section>
+      <section class="downloads-section">
+        <div class="section-heading"><div><p class="eyebrow">ARQUIVOS DO PEDIDO</p><h2>Downloads liberados</h2><p class="section-note">Os pacotes aprovados ficam reunidos nesta página.</p></div><span class="downloads-count" id="fileSummary" hidden></span></div>
+        <div class="files" id="files"><div class="empty-state">O bot libera os arquivos nesta página após aprovar o pagamento.</div></div>
         <p class="support" id="support" hidden>Precisa de ajuda? <a href="https://t.me/EixoZerobot" target="_blank" rel="noopener noreferrer">Fale com o Eixo Zero no Telegram</a>.</p>
       </section>
     </main>
-    <footer class="footer">Eixo Zero · página pessoal de entrega</footer>
+    <footer class="site-footer"><span>EIXO ZERO <i>◆</i> ENTREGA DIGITAL</span><a href="https://t.me/EixoZerobot" target="_blank" rel="noopener noreferrer">Suporte pelo Telegram ↗</a></footer>
   </div>
   <script>
     (() => {
       const byId = id => document.getElementById(id);
       const setUnavailable = message => {
         byId('status').textContent = 'Acesso não liberado';
-        byId('title').textContent = 'Não encontramos arquivos neste link';
+        byId('title').textContent = 'Seus arquivos aparecem após a aprovação';
         byId('summary').textContent = message;
-        byId('statusDot').style.background = '#a78bfa';
+        byId('statusDot').classList.remove('status-pulse');
+        byId('statusDot').style.background = 'var(--dim)';
+        byId('statusDot').style.boxShadow = 'none';
+        byId('files').replaceChildren();
+        const empty = document.createElement('div');
+        empty.className = 'empty-state';
+        empty.textContent = 'Abra o link pessoal enviado pelo bot depois da confirmação do pagamento.';
+        byId('files').append(empty);
       };
       const match = /^#entrega=([A-Za-z0-9_-]+)$/.exec(location.hash);
       if (!match) {
-        setUnavailable('Os arquivos ficam disponíveis aqui somente pelo link pessoal enviado pelo bot após a aprovação do pagamento.');
+        setUnavailable('Abra o link pessoal enviado pelo bot Eixo Zero depois da aprovação do pagamento.');
         return;
       }
       try {
@@ -54,33 +85,32 @@
           try { const url = new URL(value); return url.protocol === 'https:' && !url.username && !url.password; }
           catch { return false; }
         }))] : [];
-        if (!requestedId || String(payload.product_id) !== requestedId || !Number.isInteger(Number(payload.order_id)) || !files.length) {
-          throw new Error('invalid_delivery');
-        }
-        byId('status').textContent = 'Pagamento aprovado';
+        if (!requestedId || String(payload.product_id) !== requestedId || !Number.isInteger(Number(payload.order_id)) || Number(payload.order_id) < 1 || !files.length) throw new Error('invalid_delivery');
+        byId('status').textContent = 'Entrega liberada após aprovação';
         byId('title').textContent = payload.product_name || 'Arquivos liberados';
         byId('summary').textContent = 'Os arquivos deste pedido estão prontos para baixar.';
         byId('order').hidden = false;
         byId('order').replaceChildren();
-        const orderNumber = document.createElement('span'); orderNumber.textContent = `Pedido #${Number(payload.order_id)}`;
-        const fileCount = document.createElement('span'); fileCount.textContent = `${files.length} ${files.length === 1 ? 'arquivo' : 'arquivos'} liberados`;
-        byId('order').append(orderNumber, fileCount);
+        const orderTag = document.createElement('span'); orderTag.textContent = 'PEDIDO #' + Number(payload.order_id);
+        const gameTag = document.createElement('span'); gameTag.textContent = 'EIXO ZERO · JOGO APROVADO';
+        byId('order').append(orderTag, gameTag);
+        byId('fileSummary').hidden = false;
+        byId('fileSummary').innerHTML = '<i>◆</i>' + files.length + (files.length === 1 ? ' arquivo' : ' arquivos');
+        byId('files').replaceChildren();
         byId('support').hidden = false;
         files.forEach((value, index) => {
           const url = new URL(value);
-          let filename = url.pathname.split('/').filter(Boolean).pop() || `Arquivo ${index + 1}`;
+          let filename = url.pathname.split('/').filter(Boolean).pop() || 'Arquivo ' + (index + 1);
           try { filename = decodeURIComponent(filename); } catch {}
-          filename = filename.replace(/[<>\u0000-\u001f]/g, '').trim() || `Arquivo ${index + 1}`;
-          const ext = /\.([a-z0-9]{1,10})$/i.exec(filename)?.[1]?.toUpperCase() || 'FILE';
-          const item = document.createElement('article');
-          item.className = 'file';
-          item.style.animationDelay = `${Math.min(index * 45, 270)}ms`;
-          const badge = document.createElement('span'); badge.className = 'file-badge'; badge.textContent = ext;
+          filename = filename.replace(/[<>\u0000-\u001f]/g, '').trim() || 'Arquivo ' + (index + 1);
+          const extension = /\.([a-z0-9]{1,10})$/i.exec(filename)?.[1]?.toUpperCase() || 'FILE';
+          const item = document.createElement('article'); item.className = 'file'; item.style.animationDelay = Math.min(index * 45, 270) + 'ms';
+          const badge = document.createElement('span'); badge.className = 'file-badge'; badge.textContent = extension;
           const copy = document.createElement('span'); copy.className = 'file-copy';
           const name = document.createElement('span'); name.className = 'file-name'; name.textContent = filename;
-          const meta = document.createElement('span'); meta.className = 'file-meta'; meta.textContent = `${ext} · arquivo ${index + 1}`;
+          const meta = document.createElement('span'); meta.className = 'file-meta'; meta.textContent = extension + ' · arquivo ' + (index + 1);
           copy.append(name, meta);
-          const link = document.createElement('a'); link.className = 'download'; link.href = url.href; link.target = '_blank'; link.rel = 'noopener noreferrer'; link.referrerPolicy = 'no-referrer'; link.textContent = 'Baixar ↓';
+          const link = document.createElement('a'); link.className = 'button-download'; link.href = url.href; link.target = '_blank'; link.rel = 'noopener noreferrer'; link.referrerPolicy = 'no-referrer'; link.textContent = 'Baixar arquivo ↓';
           item.append(badge, copy, link); byId('files').append(item);
         });
       } catch {
